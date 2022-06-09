@@ -1,0 +1,50 @@
+Assign default gateway at the end
+PC0:192.168.1.1 255.255.255.0 192.168.1.100
+PC1:192.168.1.2 255.255.255.0 192.168.1.100
+PC2:192.168.2.1 255.255.255.0 192.168.2.100
+PC3:192.168.2.2 255.255.255.0 192.168.2.100
+
+switch0
+en
+conf t
+vlan 10
+name sales
+vlan 20
+name marketing
+ex
+interface range fa0/1-2
+switchport mode access
+switchport access vlan 10
+int range fa0/3-4
+switchport mode access
+switchport access vlan 20
+end
+show vlan brief
+
+router0
+en
+conf t
+int fa0/0
+ip add 192.168.1.100 255.255.255.0
+no shutdown
+ex
+int fa0/1
+ip add 192.168.2.100 255.255.255.0
+no shutdown
+end
+show ip route
+
+switch0
+en
+conf t
+int fa0/5
+switchport access vlan 10
+int fa0/6
+switchport access vlan 20
+end
+conf t
+int fa0/5
+spanning-tree portfast
+int fa0/6
+spanning-tree portfast
+
